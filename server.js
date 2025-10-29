@@ -69,8 +69,11 @@ app.post("/send-mail", upload.single("file"), async (req, res) => {
       },
     });
 
+    const logoUrl =
+      "https://www.vishwavishwani.ac.in/pgdm/images/vvism-logo.webp";
+
     // 📄 Email template
-    const htmlBody = `
+    const htmlBodyAdmin  = `
     <p>Hello Vishwa Vishwani Team,</p>
     <p>Please check the Student Certificate Verification details from the applicant <b>${applicantName}</b></p>
       <table border="1" cellspacing="0" cellpadding="8" align="middle">
@@ -87,18 +90,50 @@ app.post("/send-mail", upload.single("file"), async (req, res) => {
           <tr><th>Attachment File</th><td><a href="${fileUrl}" target="_blank">${fileUrl}</a></td></tr>
         </tbody>
       </table>
+      <br/>
+      <p>Best regards,</p>
+      <p><b>Vishwa Vishwani Team</b></p>
+      <img src="${logoUrl}" alt="Vishwa Vishwani Logo" width="180" style="margin-top:10px;" />
     `;
 
-    const mailOptions = {
+    const adminMailOptions  = {
       from: `"Student Certificate Verification" <${process.env.EMAIL_USER}>`,
-      to: "vishwavishwanidrive@gmail.com",
-      subject: `Student Verification - ${studentName}`,
-      html: htmlBody,
+      to: "vishwavishwanidrive@gmail.com, website@vishwavishwani.ac.in",
+      subject: `Student Certificate Verification from ${applicantName}`,
+      html: htmlBodyAdmin,
     };
 
-    await transporter.sendMail(mailOptions);
+    await transporter.sendMail(adminMailOptions);
+    console.log("✅ Admin email sent successfully!");
 
-    console.log("✅ Email sent successfully!");
+    // 📧 Send confirmation mail to Applicant
+    const applicantMailOptions = {
+      from: `"Vishwa Vishwani Institute of Systems And Management" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Certificate Verification Request Received",
+      html: `
+        <p>Dear <b>${applicantName}</b>,</p>
+        <p>Thank you for submitting your certificate verification request for <b>${studentName}</b>.</p>
+        <p>We have received your details successfully and our team will review and get back to you shortly.</p>
+        <br/>
+        <p><b>Submitted Details:</b></p>
+        <ul>
+          <li>Student Name: ${studentName}</li>
+          <li>Reg Number: ${regNumber}</li>
+          <li>Course: ${course}</li>
+          <li>Batch: ${batch}</li>
+          <li>Payment ID: <b>${payment_id}</b></li>
+        </ul>
+        <br/>
+        <p>Thank you for reaching out to <b>Vishwa Vishwani</b>.</p>
+        <p>Best regards,</p>
+        <p><b>Vishwa Vishwani Institute of Systems and Management</b></p>
+        <img src="${logoUrl}" alt="Vishwa Vishwani Logo" width="160" style="margin-top:10px;" />
+      `,
+    };
+
+    await transporter.sendMail(applicantMailOptions);
+    console.log("✅ Confirmation mail sent to applicant:", email);
     res.status(200).json({ success: true, message: "Email sent successfully" });
   } catch (error) {
     console.error("❌ Error:", error);
