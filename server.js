@@ -69,9 +69,6 @@ app.post("/send-mail", upload.single("file"), async (req, res) => {
       },
     });
 
-    const logoUrl =
-      "https://www.vishwavishwani.ac.in/pgdm/images/vvism-logo.webp";
-
     // 📄 Email template
     const htmlBodyAdmin  = `
     <p>Hello Vishwa Vishwani Team,</p>
@@ -93,7 +90,7 @@ app.post("/send-mail", upload.single("file"), async (req, res) => {
       <br/>
       <p>Best regards,</p>
       <p><b>Vishwa Vishwani Team</b></p>
-      <img src="${logoUrl}" alt="Vishwa Vishwani Logo" width="180" style="margin-top:10px;" />
+      <img src="https://www.vishwavishwani.ac.in/pgdm/images/vvism-logo.webp" alt="Vishwa Vishwani Logo" width="180" style="margin-top:10px;" />
     `;
 
     const adminMailOptions  = {
@@ -128,7 +125,7 @@ app.post("/send-mail", upload.single("file"), async (req, res) => {
         <p>Thank you for reaching out to <b>Vishwa Vishwani</b>.</p>
         <p>Best regards,</p>
         <p><b>Vishwa Vishwani Institute of Systems and Management</b></p>
-        <img src="${logoUrl}" alt="Vishwa Vishwani Logo" width="160" style="margin-top:10px;" />
+        <img src="https://www.vishwavishwani.ac.in/pgdm/images/vvism-logo.webp" alt="Vishwa Vishwani Logo" width="160" style="margin-top:10px;" />
       `,
     };
 
